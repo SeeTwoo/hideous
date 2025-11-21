@@ -12,13 +12,12 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include "bigass_string.h"
+#include <string.h>
 
 size_t	ft_strlen(char const *s)
 {
 	char const		*p;
 	uintptr_t const	*word_ptr;
-	uintptr_t		word;
 
 	p = s;
 	while ((uintptr_t)p & (sizeof(uintptr_t) - 1))
@@ -30,8 +29,7 @@ size_t	ft_strlen(char const *s)
 	word_ptr = (const uintptr_t *)p;
 	while (1)
 	{
-		word = *word_ptr;
-		if ((word - 0x0101010101010101) & ~word & 0x8080808080808080)
+		if (((*word_ptr) - 0x0101010101010101) & ~(*word_ptr) & 0x8080808080808080)
 			break ;
 		word_ptr++;
 	}
@@ -55,11 +53,14 @@ size_t	ft_strlen(char const *s)
 #include <stdio.h>
 int	main(void)
 {
-	int	i = 10000;
-	size_t	len;
-	
-	while (i--)
-		len = ft_strlen(BIGASS_STRING);
-	printf("size is %lu\n", len);
+	char	s[] = "hello";
+	char	empty[] = "";
+	char	longish[] = "  hello, this is a long string ya know";
+
+	printf("len of [%s] is : %lu\n", s, ft_strlen(s));
+	printf("len of [%s] is : %lu\n", empty, ft_strlen(empty));
+	printf("len of [%s] is : %lu\n", longish, ft_strlen(longish));
+	if (strlen(longish) != ft_strlen(longish))
+		return (printf("fuuuuuuck\n"));
 	return (0);
 }
